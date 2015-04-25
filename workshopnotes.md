@@ -3,6 +3,8 @@
 
 # Pre-Workshop Checklist
 
+Set repo to public
+
 Start with a fresh restart (make sure chrome doesn't autostart)
 
 Disable all services/apps that might produce a notification
