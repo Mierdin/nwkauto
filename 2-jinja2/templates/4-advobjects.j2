@@ -1,0 +1,8 @@
+{% for switch in config -%}
+hostname {{ switch.switch_hostname }}
+    {# "dictsort" automatically creates an iterator for us #}
+    {% for id, name in switch.vlans|dictsort -%}
+        vlan {{ id }}
+        name {{ name }}
+    {% endfor %}
+{% endfor %}

@@ -1,0 +1,31 @@
+hostname OSPFv2
+
+log file /var/log/quagga/ospfd.log
+log monitor
+log stdout
+log syslog
+
+password Quagga
+enable password Quagga
+
+router ospf
+# area 1 shortcut
+#       area -ge 1
+#       This is essential if you want the Level 2 routing domain to be akin to that of Intermediate System-Intermediate System
+capability opaque
+mpls-te on
+network 0.0.0.0/0 area 0
+#       Interfaces with addresses matching this prefix will belong to the area specified
+# ospf abr-type shortcut
+# ospf opaque-lsa
+# redistribute bgp
+redistribute connected
+# redistribute isis
+redistribute kernel
+# redistribute rip
+redistribute static
+
+!2
+interface eth0
+!2
+interface lo

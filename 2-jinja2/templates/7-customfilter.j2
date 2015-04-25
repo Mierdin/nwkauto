@@ -1,0 +1,7 @@
+{# Credit to Jeremy Schulman - https://vimeo.com/120012280 #}
+{% for iface_name in iface_pattern | bracket_expansion %}
+interface {{ iface_name }}
+    speed ludicrous
+    switchport mode access
+    switchport access vlan {{ vlan_name }}
+{% endfor %}

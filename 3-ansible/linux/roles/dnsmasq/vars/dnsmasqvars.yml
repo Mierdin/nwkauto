@@ -1,0 +1,10 @@
+reservations:
+  SRV01:
+    macaddr: 00:00:00:11:22:01
+    ipaddr: 192.168.1.31  
+  SRV02:
+    macaddr: 00:00:00:11:22:02
+    ipaddr: 192.168.1.32
+  SRV03:
+    macaddr: 00:00:00:11:22:03
+    ipaddr: 192.168.1.32

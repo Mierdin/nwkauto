@@ -1,0 +1,5 @@
+---
+Juniper: Also a plant
+Cisco: 6500 # They're still around, trust me.
+Brocade: True
+VMware: ['esxi', 'vcenter', 'nsx']

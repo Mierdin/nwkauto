@@ -1,0 +1,29 @@
+hostname Zebra
+
+log file /var/log/quagga/zebra.log
+log monitor
+log stdout
+log syslog
+
+password Quagga
+enable password Quagga
+
+ip forwarding
+ipv6 forwarding
+# ip[v6] route <Prefix Notation> <Egress Interface> 1
+#       In a congruent network the only static routes needed are those at the periphery of the network where they are used as a hint to the location of an adjacent multihop EBGP neighbour
+
+!2
+interface eth0
+        ip irdp multicast
+        #ipv6 nd adv-interval-option
+        #ipv6 nd prefix fd00::/64
+        #ipv6 nd router-preference low
+        link-detect
+        multicast
+        ipv6 nd suppress-ra
+!2
+interface lo
+        ip irdp multicast
+        link-detect
+        multicast

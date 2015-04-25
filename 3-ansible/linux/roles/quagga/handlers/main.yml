@@ -1,0 +1,4 @@
+---
+  - include_vars: "{{ansible_os_family}}.yml"
+  - name: Restart Quagga
+    service: name={{ quaggaserver }} state=restarted

@@ -1,0 +1,12 @@
+---
+  - include_vars: "{{ansible_os_family}}.yml"
+  - include_vars: dhcpvars.yml
+
+  - name: Deploy DHCP server for Debian Systems
+    apt: pkg={{ dhcpserver }} state=latest
+    when: ansible_os_family == 'Debian'
+
+  - name: Main DHCP Config File
+    template: src={{ conftemplate }} dest={{ conffile }}
+    notify:
+    - dhcp config update

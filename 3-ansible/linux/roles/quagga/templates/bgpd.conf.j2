@@ -1,0 +1,183 @@
+hostname BGP
+
+log file /var/log/quagga/bgpd.log
+log monitor
+log stdout
+log syslog
+
+password Quagga
+enable password Quagga
+
+access-list Internet deny 127.0.0.0/8
+#       Loopback
+access-list Internet permit 192.0.0.0/29
+#       DS-Lite
+access-list Internet deny 192.0.0.0/24
+#       IETF Protocol Assignments
+access-list Internet deny 192.0.2.0/24
+#       TEST-NET-1
+access-list Internet deny 198.51.100.0/24
+#       TEST-NET-2
+access-list Internet deny 203.0.113.0/24
+#       TEST-NET-3
+access-list Internet deny 240.0.0.0/4
+#       Reserved for Future Use
+access-list Internet permit any
+#       RFC 6890
+ipv6 access-list Internet deny 2001::/23
+#       IETF Protocol Assignments
+ipv6 access-list Internet deny 2001:db8::/32
+#       Documentation
+ipv6 access-list Internet deny 2001:10::/28
+#       Overlay Routable Cryptographic Hash IDentifiers
+ipv6 access-list Internet permit 2000::/3
+#       RFC 6890
+
+ip as-path access-list Internet permit ()
+#       Do not remove this
+ip as-path access-list Internet permit ^
+ip as-path access-list Internet permit _
+ip as-path access-list Internet permit $
+
+ip prefix-list Internet seq 5 deny 0.0.0.0/8
+#       This host on this network
+ip prefix-list Internet seq 10 deny 10.0.0.0/8
+#       Private-Use
+ip prefix-list Internet seq 15 deny 100.64.0.0/10
+#       Shared Address Space
+ip prefix-list Internet seq 20 deny 127.0.0.0/8
+#       Loopback
+ip prefix-list Internet seq 25 deny 169.254.0.0/16
+#       Link Local
+ip prefix-list Internet seq 30 deny 172.16.0.0/12
+#       Private-Use
+ip prefix-list Internet seq 35 deny 192.0.0.0/29
+#       DS-Lite
+ip prefix-list Internet seq 40 deny 192.0.0.0/24
+#       IETF Protocol Assignments
+ip prefix-list Internet seq 45 deny 192.0.2.0/24
+#       TEST-NET-1
+ip prefix-list Internet seq 50 deny 192.168.0.0/16
+#       Private-Use
+ip prefix-list Internet seq 55 deny 198.18.0.0/15
+#       Benchmarking
+ip prefix-list Internet seq 60 deny 198.51.100.0/24
+#       TEST-NET-2
+ip prefix-list Internet seq 65 deny 203.0.113.0/24
+#       TEST-NET-3
+ip prefix-list Internet seq 70 deny 240.0.0.0/4
+#       Reserved for Future Use
+ip prefix-list Internet seq 75 permit any
+#       RFC 6890
+ipv6 prefix-list Internet seq 5 deny 2001::/23
+#       IETF Protocol Assignments
+ipv6 prefix-list Internet seq 10 deny 2001::/32
+#       TEREDO
+ipv6 prefix-list Internet seq 15 deny 2001:2::/48
+#       Benchmarking
+ipv6 prefix-list Internet seq 20 deny 2001:db8::/32
+#       Documentation
+ipv6 prefix-list Internet seq 25 deny 2001:10::/28
+#       Overlay Routable Cryptographic Hash IDentifiers
+ipv6 prefix-list Internet seq 30 permit 2000::/3
+#       RFC 6890
+
+bgp multiple-instance
+
+router bgp 64512
+#       When this Autonomous System Number equals the neighbour's "remote-as" the adjacency will be IBGP otherwise the adjacency will be EBGP; legal values include 64512 through 65534 for peers inside of the confederation, or the Autonomous System Number can be the same as the "bgp confederation identifier" for this router to announce this confederation more widely
+bgp always-compare-med
+#       This means that the Multiple Exit Discriminator will be compared even when the AS paths are not equal
+bgp bestpath as-path confed
+bgp bestpath compare-routerid
+bgp bestpath med confed missing-as-worst
+bgp client-to-client reflection
+# bgp confederation identifier 64512
+#       This is the Autonomous System Number we'll be known externally as
+# bgp confederation peers 23456
+#       These are the Autonomous System Numbers inside of this confederation, possible values include 23456 and Private ASNs 64512 through 65534
+no bgp default ipv4-unicast
+bgp deterministic-med
+bgp enforce-first-as
+#       This ensures that our neighbours are not using an ASN other than that by which we know them as
+#       Unfortunately "no bgp enforce-first-as" is necessary to play along with an IBGP Bird
+bgp fast-external-failover
+bgp graceful-restart
+bgp log-neighbor-changes
+bgp network import-check
+maximum-paths 255
+maximum-paths ibgp 255
+redistribute babel
+# redistribute connected
+redistribute isis
+# redistribute kernel
+redistribute ospf
+redistribute rip
+# redistribute static
+
+neighbor AS_TRANS peer-group
+neighbor AS_TRANS remote-as 64512
+neighbor AS_TRANS activate
+neighbor AS_TRANS allowas-in 1
+#       How loopy shalt we be?
+neighbor AS_TRANS attribute-unchanged
+neighbor AS_TRANS capability dynamic
+neighbor AS_TRANS capability orf prefix-list both
+neighbor AS_TRANS capability route-refresh
+neighbor AS_TRANS ebgp-multihop 255
+neighbor AS_TRANS filter-list Internet in
+#       This utilises the "access-list"
+neighbor AS_TRANS filter-list Internet out
+#       This utilises the "access-list"
+# neighbor AS_TRANS next-hop-self
+#       This must not be configured when "route-reflector-client" is
+#       This must not be configured when more than two EBGP peers are within the same broadcast domain
+#       This must be configured when connected to a Non-Broadcast Multiple Access network that is not any-to-any
+neighbor AS_TRANS override-capability
+neighbor AS_TRANS prefix-list Internet in
+neighbor AS_TRANS prefix-list Internet out
+# neighbor AS_TRANS route-reflector-client
+#       A Route Reflector is an alternative to full mesh IBGP, where it is akin to a Bridge in a spanning tree, in this instance there is a Route Reflector at every branch
+# neighbor AS_TRANS route-server-client
+#       A Route Server concerns only EBGP peering, and only makes sense when combined with "route-map" directives
+neighbor AS_TRANS send-community both
+neighbor AS_TRANS soft-reconfiguration inbound
+# neighbor <IP> peer-group AS_TRANS
+# neighbor <IP> peer-group AS_TRANS
+
+address-family ipv4 multicast
+neighbor AS_TRANS activate
+network 224.0.0.0/4 backdoor pathlimit 255
+#       Placeholder
+exit-address-family
+
+address-family ipv4 unicast
+aggregate-address 192.88.99.0/24 summary-only
+#       6to4
+neighbor AS_TRANS activate
+network 0.0.0.0/1 backdoor pathlimit 255
+network 128.0.0.0/2 backdoor pathlimit 255
+network 192.0.0.0/3 backdoor pathlimit 255
+exit-address-family
+
+address-family ipv6 multicast
+neighbor AS_TRANS activate
+exit-address-family
+
+address-family ipv6 unicast
+aggregate-address 2000::/3
+aggregate-address 2002::/16 summary-only
+#       6to4
+neighbor AS_TRANS activate
+redistribute babel
+# redistribute connected
+redistribute isis
+# redistribute kernel
+redistribute ospf6
+redistribute ripng
+# redistribute static
+exit-address-family
+
+address-family vpnv4 unicast
+neighbor AS_TRANS activate
+exit-address-family

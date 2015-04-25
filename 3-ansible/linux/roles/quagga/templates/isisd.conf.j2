@@ -1,0 +1,32 @@
+hostname IS-IS
+
+log file /var/log/quagga/isisd.log
+log monitor
+log stdout
+log syslog
+
+password Quagga
+enable password Quagga
+
+router isis 0
+area-password md5 Quagga
+area-password md5 Quagga authenticate snp validate
+domain-password md5 Quagga
+domain-password md5 Quagga authenticate snp validate
+hostname dynamic
+is-type level-1-2
+metric-style wide
+net 49000000000000000000000000ffffffffffff00
+#       Replace ffffffffffff with a 48 bit System Identifier attached to this computer
+
+!2
+interface eth0
+        ip router isis 0
+        ipv6 router isis 0
+        isis circuit-type level-1-2
+        isis password md5 Quagga
+!2
+interface lo
+        ip router isis 0
+        ipv6 router isis 0
+        isis passive

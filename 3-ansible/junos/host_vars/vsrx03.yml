@@ -1,0 +1,53 @@
+---
+
+interfaces:
+  ge-0/0/1:
+    - { vlan: 0, ip_addr: 1.1.31.3/24 }
+  ge-0/0/2:
+    - { vlan: 0, ip_addr: 1.1.23.3/24 }
+  lo0:
+    - { vlan: 0, ip_addr: 123.123.123.1/24 }
+
+
+zones:
+  trust:
+    interfaces: [ 'ge-0/0/1.0', 'ge-0/0/2.0']
+
+ospf:
+  routerid: 3.3.3.3
+  areas:
+    0.0.0.0: [ 'ge-0/0/1.0', 'ge-0/0/2.0' ]
+
+bgp:
+  as: 131
+  groups:
+    external-peers:
+      - as: 111
+        addr: 1.1.31.1
+      - as: 121
+        addr: 1.1.23.2
+  advertise:
+    - 123.123.123.1/24
+
+
+
+
+
+
+
+
+
+
+
+# bgp:
+#   as: 131
+#   groups:
+#     external-peers:
+#       - as: 111
+#         addr: 1.1.31.1
+#         export: BGP_NETWORK
+#       - as: 121
+#         addr: 1.1.23.2
+#         export: BGP_NETWORK
+#   advertise:
+#    - 123.123.123.1/24

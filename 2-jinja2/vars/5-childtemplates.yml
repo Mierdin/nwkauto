@@ -1,0 +1,18 @@
+---
+- switch_hostname: sw01
+  vlans:
+    10: Management
+    20: vMotion
+    30: Server Network 1
+    40: Server Network 2
+- switch_hostname: sw02
+  vlans:
+    10: Management
+    20: vMotion
+    30: Server Network 1
+    40: Server Network 2
+- switch_hostname: sw03
+  vlans:
+    210: Marketing
+    220: Sales
+    230: Finance

@@ -1,0 +1,21 @@
+---
+- name: Create Junos BASECONF
+  hosts: all
+  connection: local
+  gather_facts: no
+
+  pre_tasks:
+  - name: remove host-baseconf directory
+    file: path={{configdir}}/baseconf/{{inventory_hostname}} state=absent
+    register: baseconfdir
+  - name: create host-baseconf directory
+    file: path={{baseconfdir.path}} state=directory  
+
+  roles:
+    - baseconf 
+    - { role: baseconf_pci, when: "fw_role == 'PCI'" }
+    - { role: baseconf_dmz, when: "fw_role == 'DMZ' "}
+
+  post_tasks:
+    - name: assembling into final base.conf
+      assemble: src={{ baseconfdir.path }} dest={{ baseconfdir.path}}/base.conf  

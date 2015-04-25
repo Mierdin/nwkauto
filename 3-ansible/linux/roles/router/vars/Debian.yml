@@ -1,0 +1,5 @@
+#Debian.yml
+---
+conftemplate: 'roles/router/templates/sysctl.conf.j2'
+conffile: '/etc/sysctl.conf'
+testvar: 'Hello World'

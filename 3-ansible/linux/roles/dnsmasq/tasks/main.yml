@@ -1,0 +1,17 @@
+---
+  - include_vars: "{{ansible_os_family}}.yml"
+  - include_vars: dnsmasqvars.yml
+
+  - name: Deploy DNSMASQ for Debian Systems
+    apt: pkg={{ dnsmasqserver }} state=latest
+    when: ansible_os_family == 'Debian'
+
+  - name: Copy config files
+    template: src={{ item.src }} dest={{ item.dest }}
+    with_items:
+        - { src: 'main.j2', dest: '/etc/dnsmasq.d/main.conf' }
+        - { src: 'dhcp.j2', dest: '/etc/dnsmasq.d/dhcp.conf' }
+        - { src: 'ipv6.j2', dest: '/etc/dnsmasq.d/ipv6.conf' }
+        - { src: 'resolv-dnsmasq.j2', dest: '/etc/resolv-dnsmasq.conf' }
+    notify:
+    - dnsmasq config update

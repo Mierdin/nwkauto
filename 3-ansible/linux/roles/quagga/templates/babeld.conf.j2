@@ -1,0 +1,36 @@
+hostname Babel
+
+log file /var/log/quagga/babeld.log
+log monitor
+log stdout
+log syslog
+
+password Quagga
+enable password Quagga
+
+router babel
+!1
+network eth0
+!1
+network lo
+redistribute bgp
+redistribute connected
+# redistribute isis
+redistribute kernel
+# redistribute ospf
+# redistribute ospf6
+# redistribute rip
+# redistribute ripng
+redistribute static
+
+!2
+interface eth0
+        babel wired
+        babel split-horizon
+!2
+interface lo
+        babel wired
+        no babel split-horizon
+# interface wlan0
+#       babel wireless
+#       no babel split-horizon

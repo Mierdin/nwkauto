@@ -1,0 +1,22 @@
+---
+
+# Please run "show bgp summary | display xml rpc" to see the RPC command to use here
+# Please run "show bgp summary | display xml" to see the information you need to parse through
+
+# Tables locate the data you want
+BGPNeighborTable:
+  rpc: get-bgp-summary-information # This is the NETCONF RPC command sent to the router
+  item: bgp-peer # Tag of information you want
+  key: peer-address # Unique identifier _within_ that tag
+  view: BGPNeighborView # View name (in this file) to apply to this information
+
+# Views tell PyEZ how to then display that data to you
+BGPNeighborView:
+
+  # Key/values pairs. 
+  # Key is the name of the variable you want to "register" with PyEZ
+  # Value is the location of data within the above defined table for that variable
+  fields:
+    peeraddr: peer-address
+    peeras: peer-as
+    pfx_rx: bgp-rib/received-prefix-count

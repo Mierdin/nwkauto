@@ -1,0 +1,9 @@
+---
+- name: Juniper
+  products: ['vMX', 'vSRX', 'Contrail']
+- name: Cisco
+  products: ['Nexus 7K', 'Catalyst 3750', 'ACI']
+- name: Brocade
+  products: ['BVC', 'Vyatta 5400 vRouter', 'VDX 6740']
+- name: VMware
+  products: ['vCenter', 'NSX', 'Virtual SAN']

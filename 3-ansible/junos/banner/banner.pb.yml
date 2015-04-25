@@ -1,0 +1,20 @@
+---
+- name: Create Junos Login Banner
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    banner_text: banner.txt  
+    banner_j2: banner.j2
+    banner_dest: banner.conf
+
+  tasks:
+    - shell: ../bin/flatcat {{ banner_text }}
+      register: banner_content        
+    - name: creating {{ banner_dest }}
+      template: src={{ banner_j2 }} dest=./{{ banner_dest }}
+      register: banner_conf
+    - debug: msg={{ hostvars['localhost']['banner_conf']['changed'] }}
+
+- include: ../merge_config.pb.yml file=banner/banner.conf
+

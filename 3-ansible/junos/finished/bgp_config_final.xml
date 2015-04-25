@@ -1,0 +1,57 @@
+<routing-options>
+    <autonomous-system>
+        <as-number>131</as-number>
+    </autonomous-system>
+</routing-options>
+<protocols>
+    <bgp>
+        <export>BGP_NETWORK</export>
+        <group>
+            <name>external-peers</name>
+            <type>external</type>
+            <neighbor>
+                <name>1.1.31.1</name>
+                <export>BGP_NETWORK_PREPEND</export>
+                <peer-as>111</peer-as>
+            </neighbor>
+            <neighbor>
+                <name>1.1.23.2</name>
+                <export>BGP_NETWORK</export>
+                <peer-as>121</peer-as>
+            </neighbor>
+        </group>
+    </bgp>
+</protocols>
+<policy-options>
+    <policy-statement>
+        <name>BGP_NETWORK</name>
+        <term>
+            <name>1</name>
+            <from>
+                <route-filter>
+                    <address>123.123.123.1/24</address>
+                    <exact/>
+                </route-filter>
+            </from>
+            <then>
+                <accept/>
+            </then>
+        </term>
+    </policy-statement>
+    <policy-statement>
+        <name>BGP_NETWORK_PREPEND</name>
+        <term>
+            <name>1</name>
+            <from>
+                <route-filter>
+                    <address>123.123.123.1/24</address>
+                    <exact/>
+                </route-filter>
+            </from>
+            <then>
+                <as-path-prepend>64510 64510</as-path-prepend>
+                <accept/>
+            </then>
+        </term>
+    </policy-statement>
+</policy-options>

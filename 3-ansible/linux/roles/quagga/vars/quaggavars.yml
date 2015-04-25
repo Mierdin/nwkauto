@@ -1,0 +1,10 @@
+conffiles:
+    - { name: 'babeld.conf', owner: 'quagga', group: 'quagga', mode: '640' }
+    - { name: 'bgpd.conf', owner: 'quagga', group: 'quagga', mode: '640' }
+    - { name: 'isisd.conf', owner: 'quagga', group: 'quagga', mode: '640' }
+    - { name: 'ospf6d.conf', owner: 'quagga', group: 'quagga', mode: '640' }
+    - { name: 'ospfd.conf', owner: 'quagga', group: 'quagga', mode: '640' }
+    - { name: 'ripd.conf', owner: 'quagga', group: 'quagga', mode: '640' }
+    - { name: 'ripngd.conf', owner: 'quagga', group: 'quagga', mode: '640' }
+    - { name: 'vtysh.conf', owner: 'quagga', group: 'quaggavty', mode: '660' }
+    - { name: 'zebra.conf', owner: 'quagga', group: 'quagga', mode: '640' }

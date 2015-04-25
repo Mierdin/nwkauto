@@ -1,0 +1,4 @@
+[vsrx]
+vsrx01 ip_addr=10.12.0.77 ncssh_port=22
+vsrx02 ip_addr=10.12.0.78 ncssh_port=22
+vsrx03 ip_addr=10.12.0.79 ncssh_port=22

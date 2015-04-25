@@ -1,0 +1,3 @@
+#Debian.yml
+---
+quaggaserver: 'quagga'

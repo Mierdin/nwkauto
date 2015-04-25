@@ -1,0 +1,11 @@
+---
+
+OS_version: 12.1X46-D15.3
+OS_package: junos-vsrx-12.1X46-D15.3-domestic.tgz
+
+#OS_version: 12.1X46-D10.2
+#OS_package: junos-vsrx-12.1X46-D10.2-domestic.tgz
+
+#OS_version: 12.1X44-D20.3
+#OS_package: junos-vsrx-12.1X44-D20.3-domestic.tgz
+

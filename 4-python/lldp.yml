@@ -1,0 +1,16 @@
+---
+# Provided as a second Tables/Views example - this is built in to PyEZ
+LLDPNeighborTable:
+  rpc: get-lldp-neighbors-information
+  item: lldp-neighbor-information
+  key: lldp-local-interface
+  view: LLDPNeighborView
+
+LLDPNeighborView:
+  fields:
+    local_int: lldp-local-port-id
+    local_parent: lldp-local-parent-interface-name
+    remote_type: lldp-remote-chassis-id-subtype
+    remote_chassis_id: lldp-remote-chassis-id
+    remote_port_desc: lldp-remote-port-description
+    remote_sysname: lldp-remote-system-name

@@ -1,0 +1,23 @@
+ddns-update-style none;
+
+default-lease-time 600;
+max-lease-time 7200;
+log-facility local7;
+
+subnet 192.168.50.0 netmask 255.255.255.0 {
+        range                           192.168.50.150 192.168.50.200;
+        option domain-name              "lab.example.com";
+        option routers                  192.168.50.10;
+        option subnet-mask              255.255.255.0;
+        option broadcast-address        192.168.50.255;
+        option domain-name-servers      192.168.50.10;
+        default-lease-time 86400;
+        max-lease-time 86400;
+
+{% for hostname, info in reservations.iteritems() %}
+        host {{ hostname }} {
+                hardware ethernet {{ info.macaddr }};
+                fixed-address {{ info.ipaddr }};
+        }
+{% endfor %}
+}

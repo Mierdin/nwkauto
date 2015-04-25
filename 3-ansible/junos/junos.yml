@@ -1,0 +1,77 @@
+---
+- name: "Gather Facts"
+  hosts: vsrx
+  connection: local # Note local
+  gather_facts: no # note no fact gathering, have to go in registers
+
+  tasks:
+
+    - name: gathering info from device
+      junos_get_facts: 
+        user=root
+        passwd=Juniper
+        port={{ ncssh_port }}
+        host={{ ip_addr }}
+      register: junos
+
+    - name: version
+      debug: msg={{ junos.facts.version }}
+
+    - name: serial-number
+      debug: msg={{ junos.facts.serialnumber }}
+
+- name: Creating build directories for each host
+  hosts: vsrx
+  connection: local
+  gather_facts: no
+
+  # You can use multiple identical play headers, if it helps it look better
+
+  tasks:
+    - set_fact: 
+        build_dir: "{{ build_dir }}/{{ inventory_hostname }}/tmp"
+    - name: remove host build temp directory
+      file: path={{ build_dir }} state=absent
+    - name: create host build temp directory
+      file: path={{ build_dir }} state=directory
+
+- name: Generate templates for each device by roles
+  hosts: vsrx
+  connection: local
+  gather_facts: no
+
+  # These roles just build our configs, not deploy them
+
+  roles:
+    - router_baseconf
+    - router_bgp
+
+- name: Merge the Base Configuration
+  hosts: vsrx
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: load-merge config file
+      junos_install_config: 
+        user=root
+        passwd=Juniper
+        port={{ ncssh_port }}
+        host={{ ip_addr }}
+        file={{ build_dir }}/router_baseconf.conf
+        logfile={{ log_dir }}/{{ inventory_hostname }}.log
+
+- name: Merge the BGP Configuration
+  hosts: vsrx
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: overwrite config file
+      junos_install_config: 
+        user=root
+        passwd=Juniper
+        port={{ ncssh_port }}
+        host={{ ip_addr }}
+        file={{ build_dir }}/router_bgp.xml
+        logfile={{ log_dir }}/{{ inventory_hostname }}.log

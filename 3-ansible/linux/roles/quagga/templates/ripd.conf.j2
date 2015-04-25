@@ -1,0 +1,42 @@
+hostname RIP
+
+log file /var/log/quagga/ripd.log
+log monitor
+log stdout
+log syslog
+
+password Quagga
+enable password Quagga
+
+key chain Quagga
+key 0
+key-string Quagga
+
+router rip
+!1
+network eth0
+!1
+passive-interface lo
+network lo
+redistribute bgp
+redistribute connected
+# redistribute babel
+# redistribute isis
+redistribute kernel
+# redistribute ospf
+redistribute static
+
+!2
+interface eth0
+        ip rip authentication key-chain Quagga
+        ip rip authentication mode md5 auth-length rfc
+        ip rip receive version 1 2
+        ip rip send version 1 2
+        ip rip split-horizon poisoned-reverse
+!2
+interface lo
+        ip rip authentication key-chain Quagga
+        ip rip authentication mode md5 auth-length rfc
+        ip rip receive version 1 2
+        ip rip send version 1 2
+        no ip rip split-horizon

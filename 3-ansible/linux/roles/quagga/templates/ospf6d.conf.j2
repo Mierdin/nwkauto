@@ -1,0 +1,28 @@
+hostname OSPFv3
+
+log file /var/log/quagga/ospf6d.log
+log monitor
+log stdout
+log syslog
+
+password Quagga
+enable password Quagga
+
+router ospf6
+!1
+interface eth0 area 0.0.0.0
+!1
+interface lo area 0.0.0.0
+redistribute bgp
+redistribute connected
+redistribute kernel
+# redistribute ripng
+redistribute static
+
+!2
+interface eth0
+        ipv6 ospf6 instance-id 0
+!2
+interface lo
+        ipv6 ospf6 instance-id 0
+        ipv6 ospf6 passive

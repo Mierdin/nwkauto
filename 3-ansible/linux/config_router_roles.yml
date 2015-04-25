@@ -1,0 +1,7 @@
+---
+- name: Configure Trustybox
+  hosts: lab
+  sudo: yes
+  roles:
+    - router
+    - quagga

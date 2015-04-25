@@ -1,0 +1,36 @@
+---
+- name: TOR address-book generator
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: create tempdir
+      shell: mktemp -d
+      register: mktmpd    
+    - name: "creating SRX address-book"
+      command: torabook.py {{ my_ipaddr }} {{ mktmpd.stdout }}
+
+- name: Push config to Junos devices
+  hosts: all
+  connection: local
+  gather_facts: no
+  vars:
+    timeout: 600
+    tmpdir: "{{ hostvars['127.0.0.1']['mktmpd']['stdout']}}"
+  tasks:
+    - name: 'atomic config ... '
+      junos_install_config:
+        host={{ inventory_hostname }}
+        file={{ tmpdir }}/TOR_abook.set
+        timeout={{ timeout }}
+        logfile={{ logdir }}/config.log
+
+- name: TOR address-book cleanup
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: remove tempdir
+      file: path={{ mktmpd.stdout}} state=absent
+
+

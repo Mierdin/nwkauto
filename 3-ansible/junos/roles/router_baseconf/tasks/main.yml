@@ -1,0 +1,3 @@
+---
+- name: template building
+  template: src=main.conf dest={{ build_dir }}/router_baseconf.conf

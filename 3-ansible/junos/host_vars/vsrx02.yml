@@ -1,0 +1,26 @@
+---
+
+interfaces:
+  ge-0/0/1:
+    - { vlan: 0, ip_addr: 1.1.23.2/24 }
+  ge-0/0/2:
+    - { vlan: 0, ip_addr: 1.1.12.2/24 }
+
+
+zones:
+  trust:
+    interfaces: [ 'ge-0/0/1.0', 'ge-0/0/2.0']
+
+ospf:
+  routerid: 2.2.2.2
+  areas:
+    0.0.0.0: [ 'ge-0/0/1.0', 'ge-0/0/2.0' ]
+
+bgp:
+  as: 121
+  groups:
+    external-peers:
+      - as: 111
+        addr: 1.1.12.1
+      - as: 131
+        addr: 1.1.23.3

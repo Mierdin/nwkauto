@@ -1,0 +1,8 @@
+{#- Not OCD-compliant re: nesting :) (XML is forgiving) -#}
+{% for vendor in config -%}
+{% if vendor == 'Cisco' -%}
+Big Teal
+{% else -%}
+{{ vendor }}
+{% endif -%}
+{% endfor %}

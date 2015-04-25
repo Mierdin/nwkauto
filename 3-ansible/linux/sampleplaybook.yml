@@ -1,0 +1,33 @@
+---
+- name: Show OS type
+  hosts: lab
+  gather_facts: yes
+
+  tasks:
+  - name: Show operating system
+    debug: msg="{{ansible_os_family}}"
+    # Feel free to use something else from the setup module
+
+- name: Install something
+  hosts: lab
+  sudo: yes
+
+  tasks:
+
+  - name: Install cowsay
+    apt: name=cowsay state=present update_cache=yes
+
+    # Test it out! Run cowsay in the trustybox!
+
+- name: Display Remote Output
+  hosts: lab
+  # No sudo! Separate plays allows us to run least-privlege
+
+  tasks:
+
+  - name: Record Uptime
+    shell: /usr/bin/uptime
+    register: result
+    
+  - name: Display Uptime
+    debug: msg="{{result.stdout}}"

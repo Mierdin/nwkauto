@@ -1,0 +1,107 @@
+START
+VVVVV
+
+
+<configuration>
+  {%- if bgp is defined %}
+  <routing-options>
+      <autonomous-system operation="replace">
+          <as-number>{{ bgp.as }}</as-number>
+      </autonomous-system>
+  </routing-options>
+  <protocols>
+      <bgp operation="replace">
+          {% for groupname, grouplist in bgp.groups.iteritems() %}
+          <group>
+              <name>{{ groupname }}</name>
+              <type>external</type>
+              {% for neighbor in grouplist %}
+              <neighbor>
+                  <name>{{ neighbor.addr }}</name>
+                  <peer-as>{{ neighbor.as }}</peer-as>
+              </neighbor>
+              {% endfor %}
+          </group>
+          {% endfor %}
+      </bgp>
+  </protocols>
+  {%- endif %}
+</configuration>
+
+
+
+
+FINISHED
+VVVVVVVV
+
+<configuration>
+  {%- if bgp %}
+  <routing-options>
+      <autonomous-system operation="replace">
+          <as-number>{{ bgp.as }}</as-number>
+      </autonomous-system>
+  </routing-options>
+  <protocols>
+      <bgp operation="replace">
+          {%- if bgp.advertise is defined %}
+          <export>BGP_NETWORK</export>
+          {%- endif %}
+          {% for groupname, grouplist in bgp.groups.iteritems() %}
+          <group>
+              <name>{{ groupname }}</name>
+              <type>external</type>
+              {% for neighbor in grouplist %}
+              <neighbor>
+                  <name>{{ neighbor.addr }}</name>
+                  {%- if neighbor.export is defined %}
+                  <export>{{ neighbor.export }}</export>
+                  {%- endif %}
+                  <peer-as>{{ neighbor.as }}</peer-as>
+              </neighbor>
+              {% endfor %}
+          </group>
+          {% endfor %}
+      </bgp>
+  </protocols>
+
+  {%- if bgp.advertise is defined %}
+  <policy-options>
+    <policy-statement>
+        <name>BGP_NETWORK</name>
+        <term>
+            <name>1</name>
+            <from>
+                  {% for prefix in bgp.advertise %}
+                  <route-filter>
+                      <address>{{ prefix }}</address>
+                      <exact/>
+                  </route-filter>
+                  {% endfor %}
+            </from>
+            <then>
+                <accept/>
+            </then>
+        </term>
+    </policy-statement>
+    <policy-statement>
+        <name>BGP_NETWORK_PREPEND</name>
+        <term>
+            <name>1</name>
+            <from>
+                  {% for prefix in bgp.advertise %}
+                  <route-filter>
+                      <address>{{ prefix }}</address>
+                      <exact/>
+                  </route-filter>
+                  {% endfor %}
+            </from>
+            <then>
+                <as-path-prepend>64510 64510</as-path-prepend>
+                <accept/>
+            </then>
+        </term>
+    </policy-statement>
+  </policy-options>
+  {%- endif %}
+  {%- endif %}
+</configuration>

@@ -1,0 +1,25 @@
+<configuration>
+  {%- if bgp is defined %}
+  <routing-options>
+      <autonomous-system operation="replace">
+          <as-number>{{ bgp.as }}</as-number>
+      </autonomous-system>
+  </routing-options>
+  <protocols>
+      <bgp operation="replace">
+          {% for groupname, grouplist in bgp.groups.iteritems() %}
+          <group>
+              <name>{{ groupname }}</name>
+              <type>external</type>
+              {% for neighbor in grouplist %}
+              <neighbor>
+                  <name>{{ neighbor.addr }}</name>
+                  <peer-as>{{ neighbor.as }}</peer-as>
+              </neighbor>
+              {% endfor %}
+          </group>
+          {% endfor %}
+      </bgp>
+  </protocols>
+  {%- endif %}
+</configuration>

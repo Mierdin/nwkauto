@@ -1,0 +1,3 @@
+---
+  - name: Apply sysctl changes
+    shell: sudo sysctl -p {{ conffile }}

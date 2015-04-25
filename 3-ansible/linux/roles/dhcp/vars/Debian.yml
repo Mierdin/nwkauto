@@ -1,0 +1,5 @@
+#Debian.yml
+---
+dhcpserver: 'isc-dhcp-server'
+conftemplate: 'roles/dhcp/templates/dhcpd.conf.j2'
+conffile: '/etc/dhcp/dhcpd.conf'

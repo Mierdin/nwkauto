@@ -1,0 +1,57 @@
+load factory-default
+set system host-name VSRX-01
+set interfaces ge-0/0/0 unit 0 family inet address 10.12.0.77/24
+set security zones security-zone untrust interfaces ge-0/0/0 host-inbound-traffic system-services ping
+set security zones security-zone untrust interfaces ge-0/0/0 host-inbound-traffic system-services ssh
+set security zones security-zone untrust interfaces ge-0/0/0 host-inbound-traffic system-services netconf
+set system services netconf ssh
+set system services ssh protocol-version v2
+set system root-authentication plain-text-password
+
+
+
+delete interfaces ge-0/0/1 vlan-tagging 
+delete interfaces ge-0/0/1 unit 0 vlan-id 0
+delete interfaces ge-0/0/2 vlan-tagging 
+delete interfaces ge-0/0/2 unit 0 vlan-id 0
+
+set security forwarding-options family mpls mode packet-based
+set security forwarding-options family iso mode packet-based
+set security forwarding-options family inet6 mode packet-based
+
+set security zones security-zone trust interfaces ge-0/0/1 host-inbound-traffic protocols all
+set security zones security-zone trust interfaces ge-0/0/1.0 host-inbound-traffic protocols all
+set security zones security-zone trust interfaces ge-0/0/2 host-inbound-traffic protocols all
+set security zones security-zone trust interfaces ge-0/0/2.0 host-inbound-traffic protocols all
+
+
+
+
+interfaces {
+{%- for intf in interfaces %}  
+  {{ intf }} {
+    description "created by ansible";
+    vlan-tagging;    
+{% set items = interfaces[intf] %}
+{% for i in items %}
+    unit {{ i.vlan }} {
+      description "vlan-{{ i.vlan }}";
+      vlan-id {{ i.vlan }};
+      family {
+        inet {
+          address {{ i.ip_addr }};
+        }
+      }
+    }
+{% endfor %}
+  }
+{%- endfor %}
+
+}
+
+protocols {                                                               
+    lldp {                              
+        interface ge-0/0/1.0;           
+        interface ge-0/0/2.0;           
+    }                                   
+}   

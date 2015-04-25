@@ -1,0 +1,6 @@
+---
+login_to_router: 
+    user=root
+    passwd=Juniper
+    port=22
+    host=10.12.0.1

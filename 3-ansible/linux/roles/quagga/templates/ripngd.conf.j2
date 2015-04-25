@@ -1,0 +1,31 @@
+hostname RIPng
+
+log file /var/log/quagga/ripngd.log
+log monitor
+log stdout
+log syslog
+
+password Quagga
+enable password Quagga
+
+router ripng
+aggregate-address 2002::/16
+!1
+network eth0
+!1
+passive-interface lo
+network lo
+redistribute bgp
+redistribute connected
+# redistribute babel
+# redistribute isis
+redistribute kernel
+# redistribute ospf6
+redistribute static
+
+!2
+interface eth0
+        ipv6 ripng split-horizon poisoned-reverse
+!2
+interface lo
+        no ipv6 ripng split-horizon
