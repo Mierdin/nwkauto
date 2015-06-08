@@ -25,8 +25,6 @@
   connection: local
   gather_facts: no
 
-  # You can use multiple identical play headers, if it helps it look better
-
   tasks:
     - set_fact: 
         build_dir: "{{ build_dir }}/{{ inventory_hostname }}/tmp"
@@ -58,20 +56,8 @@
         passwd=Juniper
         port={{ ncssh_port }}
         host={{ ip_addr }}
-        file={{ build_dir }}/router_baseconf.conf
+        file={{ build_dir }}/{{ item }}
         logfile={{ log_dir }}/{{ inventory_hostname }}.log
-
-- name: Merge the BGP Configuration
-  hosts: vsrx
-  connection: local
-  gather_facts: no
-
-  tasks:
-    - name: overwrite config file
-      junos_install_config: 
-        user=root
-        passwd=Juniper
-        port={{ ncssh_port }}
-        host={{ ip_addr }}
-        file={{ build_dir }}/router_bgp.xml
-        logfile={{ log_dir }}/{{ inventory_hostname }}.log
+      with_items:
+        - router_baseconf.conf
+        - router_bgp.xml
