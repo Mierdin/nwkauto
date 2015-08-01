@@ -2,6 +2,7 @@ from pprint import pprint
 from jnpr.junos import Device
 from jnpr.junos.factory import loadyaml
 from jnpr.junos.op.lldp import LLDPNeighborTable
+from jnpr.junos.exception import ConnectRefusedError
 
 # Dictionary to hold our devices. Key is the device name, and the
 # value for each key is the corresponding Device object used to
@@ -30,7 +31,7 @@ for devname, device in devs.items():
 
     try:
         device.open()
-    except jnpr.junos.exception.ConnectRefusedError:
+    except ConnectRefusedError:
         pass  # Don't care, c'est la vie!
 
     pprint(device.facts)

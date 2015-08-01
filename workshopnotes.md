@@ -53,17 +53,13 @@ Go to Disclaimer slide
 
     I do have a day job, and this is not that.
 
-    Not endorsing or promoting any one platform - some automation is possible almost anywhere
+    Not endorsing or promoting any one platform - automation is possible in many forms
 
 Go to overview slide, talk through it briefly
 
 Ask audience for some network automation anecdotes
 
-Talk about network automation concepts like culture
-
-    - DON'T need to be a "programmer". Big diff between SW dev and this
-
-    - Need to have leadership buy-in. Has to be strategic (uptime, etc)
+Network Automation Concepts
 
 Go to "Workshop Tips" slide
 
@@ -71,6 +67,8 @@ Go to "Workshop Tips" slide
     have you not follow the stuff I do manage to get through
  
 # 1 - YAML
+
+<< SHOW OF HANDS WHO HAS EXPERIENCE WITH YAML >>
 
 Why YAML - it's simple, well known, and does the job
 
@@ -302,6 +300,8 @@ Fortunately, Ansible does this for us.
 
 
 # 2 - Jinja2
+
+<< SHOW OF HANDS WHO HAS EXPERIENCE WITH YAML OR AT LEAST DJANGO TEMPLATES >>
 
 Why templates?
 
@@ -590,7 +590,7 @@ Look at vagrant ssh-config and update hosts file based on SSH port
 
 Also add SSH key to VM
 
-    ssh-copy-id vagrant@localhost -p <port>
+    ssh-copy-id vagrant@127.0.0.1 -i ~/.ssh/id_rsa -p 2222
 
 If you have an SSH key warning, delete the offending known_hosts line with:
 
