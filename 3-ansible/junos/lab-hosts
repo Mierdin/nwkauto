@@ -1,4 +1,4 @@
 [vsrx]
-vsrx01 ip_addr=10.12.0.79 ncssh_port=22
-vsrx02 ip_addr=10.12.0.80 ncssh_port=22
-vsrx03 ip_addr=10.12.0.81 ncssh_port=22
+vsrx01 ip_addr=10.12.0.79 ncssh_port=22 ansible_ssh_user=root
+vsrx02 ip_addr=10.12.0.80 ncssh_port=22 ansible_ssh_user=root
+vsrx03 ip_addr=10.12.0.81 ncssh_port=22 ansible_ssh_user=root
