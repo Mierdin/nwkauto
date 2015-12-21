@@ -1,0 +1,5 @@
+[gerrit]
+host=abathur.lab.mierdin.com
+port=29418
+project=nwkauto
+defaultbranch=master
