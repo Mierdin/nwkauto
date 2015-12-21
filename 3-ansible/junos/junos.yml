@@ -9,7 +9,7 @@
     - name: gathering info from device
       junos_get_facts: 
         user=root
-        passwd=Juniper
+        passwd=Juniper1!
         port={{ ncssh_port }}
         host={{ ip_addr }}
       register: junos
